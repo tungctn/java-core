@@ -6,7 +6,7 @@ import HomeMain from "../components/home-main";
 
 export function HomeView() {
   return (
-    <AuthGuard>
+    <>
       <HomeHeader />
       <SidebarProvider className="mt-16 bg-[#F4F7FF]">
         <div className="flex flex-1">
@@ -16,6 +16,6 @@ export function HomeView() {
           </div>
         </div>
       </SidebarProvider>
-    </AuthGuard>
+    </>
   );
 }

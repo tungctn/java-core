@@ -1,8 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -10,86 +8,16 @@ import {
   FormItem,
   FormMessage,
 } from "../../../components/ui/form";
-import { useForm } from "react-hook-form";
 import { googleClientId } from "@/lib/config_global";
-import Image from "next/image";
-import { LogIn, Mail } from "lucide-react";
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
-import { toast } from "@/hooks/use-toast";
-import { logger } from "@/lib/helper";
+import { LogIn } from "lucide-react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useTranslation } from "@/hooks/use-translation";
-import { useAuth } from "@/hooks/use-auth";
-import { decryptData } from "@/lib/crypto";
-import { FormSchema } from "../schema";
-import API from "@/services/API";
+import GoogleLoginButton from "./google-login-button";
+import { useLoginForm } from "../hooks/use-login-form";
 
 export function LoginForm({}: React.ComponentPropsWithoutRef<"form">) {
   const { t } = useTranslation();
-  const { handleGoogleLogin } = useAuth();
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const GoogleButton = () => {
-    const login = useGoogleLogin({
-      onSuccess: async (credentialResponse) => {
-        const decodedData = await decryptData(credentialResponse?.access_token);
-        logger.log("data", decodedData);
-        await handleGoogleLogin(decodedData);
-      },
-      onError: () => {
-        toast({
-          title: t("Login failed"),
-          variant: "destructive",
-        });
-      },
-    });
-
-    return (
-      <Button
-        variant="outline"
-        className="w-full h-12 font-regular bg-text6 text-black rounded-[35px]"
-        type="button"
-        onClick={() => login()}
-      >
-        <Image
-          src="/assets/images/auth/google.svg"
-          alt="Google"
-          width={24}
-          height={24}
-          className="mr-2"
-        />
-        {t("Continue with Google")}
-      </Button>
-    );
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    form.trigger();
-    const data = form.getValues();
-    logger.log("data", data);
-    const response = await API.Email.sendEmailLogin({
-      email: data.email,
-      url: `${window.location.origin}/verify-email`,
-    });
-    if (response?.status === 200) {
-      toast({
-        title: t("Email sent"),
-      });
-    } else {
-      toast({
-        title: t("Email not sent"),
-        variant: "destructive",
-      });
-    }
-  };
-
+  const { form, handleSubmit } = useLoginForm();
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -100,7 +28,7 @@ export function LoginForm({}: React.ComponentPropsWithoutRef<"form">) {
       </div>
 
       <GoogleOAuthProvider clientId={googleClientId}>
-        <GoogleButton />
+        <GoogleLoginButton />
       </GoogleOAuthProvider>
 
       <div className="relative">
@@ -160,6 +88,12 @@ export function LoginForm({}: React.ComponentPropsWithoutRef<"form">) {
           </div>
         </form>
       </Form>
+      <div className="text-center text-sm text-muted-foreground">
+        {t("If you don't have an account")}{" "}
+        <a href="#" className="underline">
+          {t("Sign up")}
+        </a>{" "}
+      </div>
     </div>
   );
 }

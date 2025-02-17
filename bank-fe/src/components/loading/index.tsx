@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "framer-motion";
-import EchoesLogo from "./echoes-logo";
+import BankLogo from "./bank-logo";
 
 export interface LoadingScreenProps {
   portal?: boolean;
@@ -26,7 +26,7 @@ export function LoadingScreen({
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <EchoesLogo />
+          <BankLogo />
           {title && (
             <div className="mt-4 text-lg text-muted-foreground">{title}</div>
           )}

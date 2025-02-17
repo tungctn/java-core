@@ -25,10 +25,10 @@ export default function RootLayout({
       </head>
       <body className="font-regular">
         <ReduxProvider>
-          <InitAppProvider>
+          {/* <InitAppProvider> */}
             {children}
             <ToasterProvider />
-          </InitAppProvider>
+          {/* </InitAppProvider> */}
         </ReduxProvider>
       </body>
     </html>

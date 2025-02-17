@@ -1,5 +1,3 @@
-import * as XLSX from "xlsx";
-
 export function validateEmail(email: any) {
   const re =
     /^(([^<>()\\,;:\s@"]+(\.[^<>().,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -114,13 +112,6 @@ export function isJsonObject(str: any) {
     return {};
   }
 }
-
-export const exportToExcel = (data: any, fileName: any) => {
-  const ws = XLSX.utils.json_to_sheet(data);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-  XLSX.writeFile(wb, `${fileName}.xlsx`);
-};
 
 export const makeid = (length: number) => {
   let result = "";

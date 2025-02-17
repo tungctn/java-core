@@ -1,8 +1,9 @@
 // components/Logo.tsx
+import { colorBase } from "@/lib/config_global";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-const EchoesLogo = () => {
+const BankLogo = () => {
   return (
     <div className="flex flex-col items-center gap-2">
       {/* Main Logo Animation Container */}
@@ -33,7 +34,11 @@ const EchoesLogo = () => {
               width: "100%",
               height: "100%",
               border: `2px solid ${
-                index === 0 ? "#b091ff" : index === 1 ? "#5a88e0" : "#3e4de0"
+                index === 0
+                  ? colorBase.text5
+                  : index === 1
+                  ? colorBase.text4
+                  : colorBase.text3
               }`,
               borderRadius: "50%",
               opacity: 0.6,
@@ -43,7 +48,7 @@ const EchoesLogo = () => {
               scale: [1 - index * 0.1, 1 + index * 0.1],
             }}
             transition={{
-              duration: 3 + index,
+              duration: 2 + index,
               repeat: Infinity,
               ease: "linear",
             }}
@@ -59,7 +64,8 @@ const EchoesLogo = () => {
               width: 8,
               height: 8,
               borderRadius: "50%",
-              backgroundColor: index % 2 === 0 ? "#b091ff" : "#5a88e0",
+              backgroundColor:
+                index % 2 === 0 ? colorBase.text5 : colorBase.text4,
             }}
             animate={{
               x: [0, Math.cos((index * 60 * Math.PI) / 180) * 80],
@@ -67,10 +73,10 @@ const EchoesLogo = () => {
               opacity: [0.8, 0.3, 0.8],
             }}
             transition={{
-              duration: 2,
+              duration: 1.5,
               repeat: Infinity,
               repeatType: "reverse",
-              delay: index * 0.2,
+              delay: index * 0.1,
             }}
           />
         ))}
@@ -100,4 +106,4 @@ const EchoesLogo = () => {
   );
 };
 
-export default EchoesLogo;
+export default BankLogo;
