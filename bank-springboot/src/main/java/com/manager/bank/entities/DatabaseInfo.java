@@ -1,4 +1,4 @@
-package com.manager.bank.model;
+package com.manager.bank.entities;
 
 public class DatabaseInfo {
     private String message;

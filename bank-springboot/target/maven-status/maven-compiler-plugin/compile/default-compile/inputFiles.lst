@@ -1,4 +1,10 @@
 /home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/BankApplication.java
 /home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/controller/DatabaseController.java
 /home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/controller/HelloController.java
-/home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/model/DatabaseInfo.java
+/home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/controller/UserController.java
+/home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/dto/user/CreateRequest.java
+/home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/entities/Base.java
+/home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/entities/DatabaseInfo.java
+/home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/entities/User.java
+/home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/repositories/UserRepository.java
+/home/ubuntu/Workspace/java-core/bank-springboot/src/main/java/com/manager/bank/services/UserService.java
