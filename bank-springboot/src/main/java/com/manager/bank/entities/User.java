@@ -1,33 +1,50 @@
 package com.manager.bank.entities;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(name = "email_unique", columnNames = "email"),
+    @UniqueConstraint(name = "phoneNumber_unique", columnNames = "phoneNumber")
+}, indexes = {
+    @Index(name = "idx_phoneNumber", columnList = "phoneNumber")
+})
 public class User extends Base {
     @Id
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     private int id;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private String role;
+    @NotBlank(message = "First name is required")
+    private String firstName = "";
+    @NotBlank(message = "Last name is required")
+    private String lastName = "";
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email address")
+    @Column(unique = true)
+    private String email = "";
+    @NotBlank(message = "Phone number is required")
+    @Column(unique = true)
+    @Pattern(regexp = "^[0-9]{10}$", message = "Invalid phone number")
+    private String phoneNumber = "";
+    @NotBlank(message = "Password is required")
+    private String password = "";
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
 
-    public User() {
-    }
-
-    public User(int id, String firstName, String lastName, String email, String password, String role, String createdAt, String updatedAt) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+    public User() {}
 
     public int getId() {
         return id;
@@ -53,6 +70,14 @@ public class User extends Base {
         this.lastName = lastName;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -69,11 +94,11 @@ public class User extends Base {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
