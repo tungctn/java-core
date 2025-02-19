@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "bank",
-      script: "mvn spring-boot:run",
+      script: "npm run start",
     },
   ],
 };

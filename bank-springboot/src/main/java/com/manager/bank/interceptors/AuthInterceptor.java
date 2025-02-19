@@ -14,6 +14,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtService jwtService;
 
+    @SuppressWarnings("null")
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String token = request.getHeader("Authorization");
