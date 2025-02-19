@@ -1,5 +1,7 @@
 package com.manager.bank.entities;
 
+import com.manager.bank.entities.ENUM.Role;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,20 +29,26 @@ public class User extends Base {
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     private int id;
+
     @NotBlank(message = "First name is required")
     private String firstName = "";
+
     @NotBlank(message = "Last name is required")
     private String lastName = "";
+
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email address")
     @Column(unique = true)
     private String email = "";
+
     @NotBlank(message = "Phone number is required")
     @Column(unique = true)
     @Pattern(regexp = "^[0-9]{10}$", message = "Invalid phone number")
     private String phoneNumber = "";
+
     @NotBlank(message = "Password is required")
     private String password = "";
+    
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
@@ -101,6 +109,5 @@ public class User extends Base {
     public void setRole(Role role) {
         this.role = role;
     }
-
 }
 

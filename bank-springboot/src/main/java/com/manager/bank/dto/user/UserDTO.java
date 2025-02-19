@@ -1,6 +1,6 @@
 package com.manager.bank.dto.user;
 
-import com.manager.bank.entities.Role;
+import com.manager.bank.entities.ENUM.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

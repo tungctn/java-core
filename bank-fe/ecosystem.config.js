@@ -1,8 +1,8 @@
 module.exports = {
   apps: [
     {
-      name: "echoes-feature",
-      script: "npm run start",
+      name: "bank",
+      script: "mvn spring-boot:run",
     },
   ],
 };
