@@ -19,7 +19,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/api/**")         // áp dụng cho routes này
                 .excludePathPatterns(               // trừ các routes này
                     "/api/auth/login",
-                    "/api/auth/register"
+                    "/api/auth/register",
+                    "/api/banks/create"
                 );
     }
 }
