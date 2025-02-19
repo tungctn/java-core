@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: OTP Service with Firebase Authentication
+
+Globals:
+  Function:
+    Timeout: 30
+    Runtime: nodejs18.x
+    MemorySize: 512
+    Environment:
+      Variables:
+        NODE_ENV: production
+
+Resources:
+  # Lambda Function để gửi OTP
+  SendOtpFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: sendOTPHandler.handler
+      Description: Lambda function để gửi mã OTP qua Firebase
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+  # Lambda Function để xác thực OTP
+  VerifyOtpFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/
+      Handler: verifyOTPHandler.handler
+      Description: Lambda function để xác thực mã OTP
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+Outputs:
+  SendOtpFunction:
+    Description: "Send OTP Lambda Function ARN"
+    Value: !GetAtt SendOtpFunction.Arn
+
+  VerifyOtpFunction:
+    Description: "Verify OTP Lambda Function ARN"
+    Value: !GetAtt VerifyOtpFunction.Arn
