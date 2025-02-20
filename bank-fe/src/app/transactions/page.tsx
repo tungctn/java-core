@@ -1,11 +1,11 @@
-import { HomeView } from "@/sections/home/view/home-view";
+import TransactionView from "@/sections/transactions/view/transaction-view";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Home",
-  description: "Home page",
+  title: "Transactions",
+  description: "Transactions page",
 };
 
-export default function HomePage() {
-  return <HomeView />;
+export default function TransactionsPage() {
+  return <TransactionView />;
 }

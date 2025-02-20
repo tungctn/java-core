@@ -1,22 +1,18 @@
-// home-view.tsx
-"use client";
-
-import HomeMain from "../components/home-main";
-import { useEffect, useState } from "react";
 import MainLayout from "@/components/layout/main-layout";
-
-export function HomeView() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-
+import HomeHeader from "../components/home-header";
+import MetricsOverview from "../components/metrics-overview";
+import LinkedBanks from "../components/linked-banks";
+export default function HomeView() {
   return (
     <MainLayout>
-      <HomeMain />
+      <div className="p-6 max-w-7xl mx-auto w-full space-y-8">
+        {/* Header */}
+        <HomeHeader />
+        {/* Metrics Overview */}
+        <MetricsOverview />
+        {/* Linked Banks Section */}
+        <LinkedBanks />
+      </div>
     </MainLayout>
   );
 }
