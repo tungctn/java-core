@@ -14,6 +14,7 @@ import com.manager.bank.config.SecurityConfig;
 import com.manager.bank.dto.auth.LoginRequest;
 import com.manager.bank.dto.auth.RegisterRequest;
 import com.manager.bank.entities.User;
+import com.manager.bank.repositories.UserRepository;
 import com.manager.bank.services.JwtService;
 import com.manager.bank.services.UserService;
 
@@ -24,6 +25,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private SecurityConfig securityConfig;
@@ -47,7 +51,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<String>> register(@RequestBody RegisterRequest request) {
-        userService.register(request);
+        User user = userRepository.findByPhoneNumberOrEmail(request.getPhoneNumber(), request.getEmail());
+        if (user != null) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, "Email or PhoneNumber already", null));
+        }
+        userService.createUser(request);
         return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", null));
     }
 

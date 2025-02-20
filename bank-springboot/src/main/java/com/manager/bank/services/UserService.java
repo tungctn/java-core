@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.manager.bank.dto.auth.RegisterRequest;
 import com.manager.bank.dto.user.CreateRequest;
+import com.manager.bank.dto.user.UpdateRequest;
 import com.manager.bank.dto.user.UserDTO;
 import com.manager.bank.entities.User;
 import com.manager.bank.repositories.UserRepository;
@@ -17,17 +18,6 @@ public class UserService {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    public User createUser(CreateRequest request) {
-        User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
-        return userRepository.save(user); 
-    }
 
     public User getUserByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber);
@@ -54,23 +44,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void register(RegisterRequest request) {
-        String email = request.getEmail().trim();
+    public void createUser(RegisterRequest request) {
+        String email = request.getEmail().trim().toLowerCase();
         String phoneNumber = request.getPhoneNumber().trim();
         String firstName = request.getFirstName().trim();
         String lastName = request.getLastName().trim();
-
-        if (userRepository.existsByEmail(email)) {
-            throw new RuntimeException("Email is already in use");
-        }
-
-        if (userRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new RuntimeException("Phone number is already in use");
-        }
-
-        if (!request.getPassword().equals(request.getConfirmPassword())) {
-            throw new RuntimeException("Passwords do not match");
-        }
 
         String hashedPassword = passwordEncoder.encode(request.getPassword());
 
@@ -82,5 +60,26 @@ public class UserService {
         newUser.setPassword(hashedPassword);
 
         userRepository.save(newUser);
+    }
+
+    public UserDTO UpdateUser(Integer userId, UpdateRequest request) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) return null;
+        if (request.getFirstName() != null && !request.getFirstName().isEmpty()) {
+            user.setFirstName(request.getFirstName());
+        }
+        if (request.getLastName() != null && !request.getLastName().isEmpty()) {
+            user.setLastName(request.getLastName());
+        }
+        userRepository.save(user);
+
+        return new UserDTO(
+            user.getId(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getEmail(),
+            user.getPhoneNumber(),
+            user.getRole()
+        );
     }
 }

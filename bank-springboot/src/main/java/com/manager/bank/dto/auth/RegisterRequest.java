@@ -15,7 +15,6 @@ public class RegisterRequest {
     private String email;
 
     @NotBlank(message = "First name is required")
-    @Size(min = 2, message = "First name must have at least 2 characters")
     private String firstName;
 
     @NotBlank(message = "Last name is required")
@@ -24,9 +23,6 @@ public class RegisterRequest {
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
-
-    @NotBlank(message = "Confirm password is required")
-    private String confirmPassword;
 
     // get & set
     public String getPhoneNumber() {
@@ -59,10 +55,5 @@ public class RegisterRequest {
     public void setPassword(String password) {
         this.password = password;
     }
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
+
 }
