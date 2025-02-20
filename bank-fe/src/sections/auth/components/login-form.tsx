@@ -6,6 +6,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "../../../components/ui/form";
 import { googleClientId } from "@/lib/config_global";
@@ -46,12 +47,13 @@ export function LoginForm({}: React.ComponentPropsWithoutRef<"form">) {
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="email"
+              name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>{t("Phone number*")}</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Email*"
+                      placeholder="Phone number*"
                       className="h-12 border border-black rounded-[35px] bg-text6 px-6"
                       {...field}
                     />
@@ -65,6 +67,7 @@ export function LoginForm({}: React.ComponentPropsWithoutRef<"form">) {
               name="password"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>{t("Password*")}</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Password*"

@@ -82,7 +82,7 @@ export async function axiosDELETE(type = "", Url: any) {
     });
 }
 
-export const TOKEN_KEY = "echoes-token";
+export const TOKEN_KEY = "bank-token";
 
 export function getAuthToken() {
   if (typeof window !== "undefined") {

@@ -7,7 +7,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: {
     template: "%s | Bank system",
-    default: "Bank system",
+    default: "Bank system | Bank System",
   },
   description: "Bank system",
 };
@@ -25,10 +25,10 @@ export default function RootLayout({
       </head>
       <body className="font-regular">
         <ReduxProvider>
-          {/* <InitAppProvider> */}
+          <InitAppProvider>
             {children}
             <ToasterProvider />
-          {/* </InitAppProvider> */}
+          </InitAppProvider>
         </ReduxProvider>
       </body>
     </html>

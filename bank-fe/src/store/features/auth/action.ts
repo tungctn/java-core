@@ -11,7 +11,7 @@ export const getUserLogin = createAsyncThunk(
       if (!token) {
         throw new Error("No authentication token found");
       }
-      const res = await API.Auth.me();
+      const res = await API.User.me();
       console.log("res", res?.data?.data);
       return res?.data?.data;
     } catch (error: any) {
