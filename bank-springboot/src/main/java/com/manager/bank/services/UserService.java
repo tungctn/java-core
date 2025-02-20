@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.manager.bank.dto.auth.RegisterRequest;
 import com.manager.bank.dto.user.CreateRequest;
 import com.manager.bank.dto.user.UserDTO;
 import com.manager.bank.entities.User;
@@ -51,5 +52,35 @@ public class UserService {
         if (user == null) return;
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    public void register(RegisterRequest request) {
+        String email = request.getEmail().trim();
+        String phoneNumber = request.getPhoneNumber().trim();
+        String firstName = request.getFirstName().trim();
+        String lastName = request.getLastName().trim();
+
+        if (userRepository.existsByEmail(email)) {
+            throw new RuntimeException("Email is already in use");
+        }
+
+        if (userRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new RuntimeException("Phone number is already in use");
+        }
+
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw new RuntimeException("Passwords do not match");
+        }
+
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
+
+        User newUser = new User();
+        newUser.setPhoneNumber(phoneNumber);
+        newUser.setEmail(email);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setPassword(hashedPassword);
+
+        userRepository.save(newUser);
     }
 }

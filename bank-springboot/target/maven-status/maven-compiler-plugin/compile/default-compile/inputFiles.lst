@@ -7,6 +7,7 @@ C:\Users\Lenovo\Desktop\WorkSpace Code\java-core\bank-springboot\src\main\java\c
 C:\Users\Lenovo\Desktop\WorkSpace Code\java-core\bank-springboot\src\main\java\com\manager\bank\controller\HelloController.java
 C:\Users\Lenovo\Desktop\WorkSpace Code\java-core\bank-springboot\src\main\java\com\manager\bank\controller\UserController.java
 C:\Users\Lenovo\Desktop\WorkSpace Code\java-core\bank-springboot\src\main\java\com\manager\bank\dto\auth\LoginRequest.java
+C:\Users\Lenovo\Desktop\WorkSpace Code\java-core\bank-springboot\src\main\java\com\manager\bank\dto\auth\RegisterRequest.java
 C:\Users\Lenovo\Desktop\WorkSpace Code\java-core\bank-springboot\src\main\java\com\manager\bank\dto\bank\BankDTO.java
 C:\Users\Lenovo\Desktop\WorkSpace Code\java-core\bank-springboot\src\main\java\com\manager\bank\dto\bank\CreateRequest.java
 C:\Users\Lenovo\Desktop\WorkSpace Code\java-core\bank-springboot\src\main\java\com\manager\bank\dto\user\ChangePasswordRequest.java

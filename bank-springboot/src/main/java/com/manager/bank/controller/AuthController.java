@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.manager.bank.config.ApiResponse;
 import com.manager.bank.config.SecurityConfig;
 import com.manager.bank.dto.auth.LoginRequest;
+import com.manager.bank.dto.auth.RegisterRequest;
 import com.manager.bank.entities.User;
 import com.manager.bank.services.JwtService;
 import com.manager.bank.services.UserService;
@@ -42,6 +43,12 @@ public class AuthController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Login successful", Map.of(
             "token", jwtService.generateToken(user)
         )));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<String>> register(@RequestBody RegisterRequest request) {
+        userService.register(request);
+        return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", null));
     }
 
     
