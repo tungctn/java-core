@@ -46,4 +46,10 @@ public class UserService {
         );
     }
     
+    public void changePassword(Integer userId, String newPassword) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user == null) return;
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+    }
 }
