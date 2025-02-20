@@ -1,8 +1,8 @@
 "use client";
 
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/layout/app-sidebar";
-import { HomeHeader } from "@/sections/home/components/home-header";
+import { AppSidebar } from "@/components/layout/sidebar/app-sidebar";
+import { HomeHeader } from "@/components/layout/sidebar/header";
 import { ProfileMain } from "../components/profile-main";
 
 export function ProfileView() {
@@ -19,4 +19,4 @@ export function ProfileView() {
       </SidebarProvider>
     </>
   );
-} 
+}

@@ -1,4 +1,4 @@
-import { axiosGET, axiosPOST, axiosPUT } from "@/lib/axios";
+import { axiosPOST, axiosPUT } from "@/lib/axios";
 
 export default class Auth {
   googleLogin(data: any) {
@@ -7,10 +7,11 @@ export default class Auth {
   verifyLogin(data: any) {
     return axiosPOST("api_gw", "/api/auth/verify-email", data);
   }
-  me() {
-    return axiosGET("api_gw", "/api/account/me");
-  }
+
   updateProfile(data: any) {
-    return axiosPUT("api_gw", "/api/account/me", data);
+    return axiosPUT("api_gw", "/api/auth/me", data);
+  }
+  login(data: any) {
+    return axiosPOST("api_gw", "/api/auth/login", data);
   }
 }
