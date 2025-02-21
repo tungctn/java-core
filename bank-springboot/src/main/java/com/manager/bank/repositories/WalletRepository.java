@@ -10,5 +10,5 @@ import com.manager.bank.entities.Wallet;
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet, Integer> {
     // createAt
-    List<Wallet> findByBank(Bank bank);
+    // List<Wallet> findByBank(Bank bank);
 }

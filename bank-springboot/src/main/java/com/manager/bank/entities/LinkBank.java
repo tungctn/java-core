@@ -1,12 +1,18 @@
 package com.manager.bank.entities;
 
+import com.manager.bank.entities.ENUM.LinkBankStatus;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "link_banks", uniqueConstraints = {
@@ -17,20 +23,21 @@ public class LinkBank extends Base {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "link_bank_seq")
     private int id;
 
-    @NotBlank(message = "userId is required")
-    private String userId;
+    @NotNull(message = "User ID không được để trống")
+    private int userId;
     
-    @NotBlank(message = "bankId is required")
-    private String bankId;
+    @NotNull(message = "Bank ID không được để trống")
+    private int bankId;
 
     @NotBlank(message = "accountNumber is required")
+    @Column(unique = true)
     private String accountNumber;
 
     @NotBlank(message = "accountName is required")
     private String accountName;
 
-    @NotBlank(message = "status is required")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    public LinkBankStatus status = LinkBankStatus.PENDING;
 
     public LinkBank() {}
         
@@ -42,19 +49,19 @@ public class LinkBank extends Base {
         this.id = id;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
-    public String getBankId() {
+    public int getBankId() {
         return bankId;
     }
 
-    public void setBankId(String bankId) {
+    public void setBankId(int bankId) {
         this.bankId = bankId;
     }
 
@@ -74,11 +81,11 @@ public class LinkBank extends Base {
         this.accountName = accountName;
     }
 
-    public String getStatus() {
+    public LinkBankStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(LinkBankStatus status) {
         this.status = status;
     }
 }

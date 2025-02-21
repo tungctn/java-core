@@ -13,4 +13,8 @@ public class ENUM {
     public enum TransactionStatus {
         PENDING, COMPLETED, FAILED
     }
+
+    public enum LinkBankStatus {
+        PENDING, COMPLETED, FAILED
+    }
 }
