@@ -1,13 +1,9 @@
 package com.manager.bank.entities;
-import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
@@ -33,19 +29,7 @@ public class Bank extends Base {
     @NotBlank(message = "shortName is required")
     private String shortName;
 
-    @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wallet> wallets;
-
-    public Bank() {
-    }
-
-    public Bank(int id, String name, String code, String logo, String shortName, String createdAt, String updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.code = code;
-        this.logo = logo;
-        this.shortName = shortName;
-    }
+    public Bank() {}
 
     public int getId() {
         return id;

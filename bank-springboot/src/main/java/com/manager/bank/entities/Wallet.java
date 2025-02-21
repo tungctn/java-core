@@ -25,20 +25,20 @@ public class Wallet extends Base {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wallet_seq")
     private int id;
 
-    @NotBlank(message = "stk is required")
-    @Column(unique = true)
-    private String stk;
-
-    @NotBlank(message = "bankId is required")
-    @ManyToOne
-    @JoinColumn(name = "bank_id", nullable = false) // Khóa ngoại
-    private Bank bank;
-
     @NotBlank(message = "userId is required")
-    private int userId;
+    private Integer userId;
+
+    @NotBlank(message = "currency is required")
+    private String currency;
 
     @NotBlank(message = "balance is required")
     private String balance;
+
+    @NotBlank(message = "bankId is required")
+    private Integer bankId;
+
+    @NotBlank(message = "status is required")
+    private String status;
 
     public Wallet() {
     }
@@ -51,28 +51,20 @@ public class Wallet extends Base {
         this.id = id;
     }
 
-    public String getStk() {
-        return stk;
-    }   
-
-    public void setStk(String stk) {
-        this.stk = stk;
-    }
-
-    public Bank getBank() {
-        return bank;
-    }
-
-    public void setBank(Bank bank) {
-        this.bank = bank;
-    }
-
-    public int getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public String getBalance() {
@@ -81,5 +73,21 @@ public class Wallet extends Base {
 
     public void setBalance(String balance) {
         this.balance = balance;
+    }
+
+    public Integer getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(Integer bankId) {
+        this.bankId = bankId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
