@@ -1,6 +1,5 @@
 package com.manager.bank.entities;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,8 +9,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 @Entity
 @Table(name = "wallets", uniqueConstraints = {
@@ -33,12 +30,6 @@ public class Wallet extends Base {
 
     @NotBlank(message = "balance is required")
     private String balance;
-
-    @NotBlank(message = "bankId is required")
-    private Integer bankId;
-
-    @NotBlank(message = "status is required")
-    private String status;
 
     public Wallet() {
     }
@@ -73,21 +64,5 @@ public class Wallet extends Base {
 
     public void setBalance(String balance) {
         this.balance = balance;
-    }
-
-    public Integer getBankId() {
-        return bankId;
-    }
-
-    public void setBankId(Integer bankId) {
-        this.bankId = bankId;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

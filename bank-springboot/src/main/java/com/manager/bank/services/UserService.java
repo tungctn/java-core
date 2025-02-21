@@ -5,7 +5,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.manager.bank.dto.auth.RegisterRequest;
-import com.manager.bank.dto.user.CreateRequest;
 import com.manager.bank.dto.user.UpdateRequest;
 import com.manager.bank.dto.user.UserDTO;
 import com.manager.bank.entities.User;

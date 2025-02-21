@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.manager.bank.entities.ENUM;
 import com.manager.bank.entities.Wallet;
 import com.manager.bank.repositories.WalletRepository;
 
@@ -49,5 +50,13 @@ public class WalletService {
         // Cập nhật lại balance (chuyển về String trước khi lưu)
         wallet.setBalance(newBalance.toString());
         walletRepository.save(wallet);
+    }
+
+    public Wallet createWallet(Integer userId) {
+        Wallet wallet = new Wallet();
+        wallet.setUserId(userId);
+        wallet.setBalance("0");
+        wallet.setCurrency("VND");
+        return walletRepository.save(wallet);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.manager.bank.dto.linkBank.LinkBankRequest;
 import com.manager.bank.entities.LinkBank;
+import com.manager.bank.entities.ENUM;
 import com.manager.bank.repositories.LinkBankRepository;
 
 @Service
@@ -20,8 +21,11 @@ public class LinkBankService {
         newLinkBank.setAccountNumber(request.getAccountNumber().trim());
         newLinkBank.setBankId(request.getBankId());
 
-        linkBankRepository.save(newLinkBank);
-
-        return newLinkBank;
+        LinkBank linkBank = linkBankRepository.save(newLinkBank);
+        if (linkBank != null) {
+            linkBank.setStatus(ENUM.LinkBankStatus.COMPLETED);
+            linkBankRepository.save(linkBank);
+        }
+        return linkBank;
     }
 }

@@ -14,9 +14,11 @@ import com.manager.bank.config.SecurityConfig;
 import com.manager.bank.dto.auth.LoginRequest;
 import com.manager.bank.dto.auth.RegisterRequest;
 import com.manager.bank.entities.User;
+import com.manager.bank.entities.Wallet;
 import com.manager.bank.repositories.UserRepository;
 import com.manager.bank.services.JwtService;
 import com.manager.bank.services.UserService;
+import com.manager.bank.services.WalletService;
 
 
 @RestController
@@ -26,6 +28,8 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private WalletService walletService;
     @Autowired
     private UserRepository userRepository;
 
@@ -49,6 +53,7 @@ public class AuthController {
         )));
     }
 
+    @SuppressWarnings("null")
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<String>> register(@RequestBody RegisterRequest request) {
         User user = userRepository.findByPhoneNumberOrEmail(request.getPhoneNumber(), request.getEmail());
@@ -57,8 +62,7 @@ public class AuthController {
                     .body(new ApiResponse<>(false, "Email or PhoneNumber already", null));
         }
         userService.createUser(request);
+        walletService.createWallet(user.getId());
         return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", null));
     }
-
-    
 }
