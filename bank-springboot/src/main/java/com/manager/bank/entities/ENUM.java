@@ -1,5 +1,8 @@
 package com.manager.bank.entities;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ENUM {
     public enum Role {
         ADMIN,

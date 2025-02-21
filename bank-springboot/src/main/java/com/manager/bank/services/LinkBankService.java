@@ -28,4 +28,8 @@ public class LinkBankService {
         }
         return linkBank;
     }
+
+    public LinkBank getLinkBankById(int id) {
+        return linkBankRepository.findById(id).orElse(null);
+    }
 }

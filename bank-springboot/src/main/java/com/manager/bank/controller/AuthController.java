@@ -14,7 +14,6 @@ import com.manager.bank.config.SecurityConfig;
 import com.manager.bank.dto.auth.LoginRequest;
 import com.manager.bank.dto.auth.RegisterRequest;
 import com.manager.bank.entities.User;
-import com.manager.bank.entities.Wallet;
 import com.manager.bank.repositories.UserRepository;
 import com.manager.bank.services.JwtService;
 import com.manager.bank.services.UserService;

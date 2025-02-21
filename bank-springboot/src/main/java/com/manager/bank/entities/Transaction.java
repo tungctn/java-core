@@ -3,6 +3,8 @@ package com.manager.bank.entities;
 import com.manager.bank.entities.ENUM.TransactionStatus;
 import com.manager.bank.entities.ENUM.TransactionType;
 
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,15 +31,25 @@ public class Transaction extends Base {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_seq")
     private int id;
 
-    @NotBlank(message = "fromUser is required")
-    private int fromUser;
+    @Nullable
+    @Column(nullable = true)
+    private int fromUser = 0;
 
-    @NotBlank(message = "toUser is required")
-    private int toUser;
+    @Nullable
+    @Column(nullable = true)
+    private int toUser = 0;
+
+    @Nullable
+    @Column(nullable = true)
+    private int toBankId = 0;
+
+    @Nullable
+    @Column(nullable = true)
+    private int fromBankId = 0;
 
     @NotBlank(message = "amount is required")
     private String amount;
-
+    
     @NotBlank(message = "currency is required")
     private String currency;
 
@@ -61,22 +73,37 @@ public class Transaction extends Base {
         this.id = id;
     }
 
-    public int getfromUser() {
+    public int getFromUser() {
         return fromUser;
     }
 
-    public void setfromUser(int fromUser) {
+    public void setFromUser(int fromUser) {
         this.fromUser = fromUser;
     }
 
-    public int gettoUser() {
+    public int getToUser() {
         return toUser;
     }
 
-    public void settoUser(int toUser) {
+    public void setToUser(int toUser) {
         this.toUser = toUser;
     }
 
+    public int getToBankId() {
+        return toBankId;
+    }
+
+    public void setToBankId(int toBankId) {
+        this.toBankId = toBankId;
+    }
+
+    public int getFromBankId() {
+        return fromBankId;
+    }
+
+    public void setFromBankId(int fromBankId) {
+        this.fromBankId = fromBankId;
+    }
     public String getAmount() {
         return amount;
     }
