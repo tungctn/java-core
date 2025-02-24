@@ -5,57 +5,87 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.manager.bank.entities.ENUM;
 import com.manager.bank.entities.Wallet;
 import com.manager.bank.repositories.WalletRepository;
+import com.manager.bank.dto.wallet.WalletResponse;
+import com.manager.bank.constants.WalletErrorType;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j  // Add Lombok logging
 public class WalletService {
     @Autowired
     private WalletRepository walletRepository;
 
-    // Tăng số dư
     @Transactional
-    public void increaseBalance(int walletId, String amount) {
-        Wallet wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+    public WalletResponse increaseBalance(int walletId, String amount) {
+        try {
+            Wallet wallet = walletRepository.findById(walletId)
+                    .orElseThrow(() -> new RuntimeException("Wallet not found"));
 
-        // Chuyển balance từ String -> BigDecimal
-        BigDecimal currentBalance = new BigDecimal(wallet.getBalance());
-        BigDecimal amountToAdd = new BigDecimal(amount);
+            BigDecimal amountToAdd = new BigDecimal(amount);
+            if (amountToAdd.compareTo(BigDecimal.ZERO) <= 0) {
+                log.warn("Invalid amount to add: {}", amount);
+                return WalletResponse.error("Invalid amount", "INVALID_AMOUNT");
+            }
 
-        // Cộng số tiền mới vào số dư hiện tại
-        BigDecimal newBalance = currentBalance.add(amountToAdd);
-
-        // Cập nhật lại balance (chuyển về String trước khi lưu)
-        wallet.setBalance(newBalance.toString());
-        walletRepository.save(wallet);
+            BigDecimal newBalance = wallet.getBalance().add(amountToAdd);
+            wallet.setBalance(newBalance);
+            walletRepository.save(wallet);
+            
+            return WalletResponse.success(wallet.getBalance(), newBalance);
+            
+        } catch (Exception e) {
+            log.error("Error increasing balance: {}", e.getMessage());
+            return WalletResponse.error("System error", "SYSTEM_ERROR");
+        }
     }
 
-    // Giảm số dư
     @Transactional
-    public void decreaseBalance(int walletId, String amount) {
-        Wallet wallet = walletRepository.findById(walletId)
-                .orElseThrow(() -> new RuntimeException("Wallet not found"));
+    public WalletResponse decreaseBalance(int walletId, String amount) {
+        // Validate input
+        if (walletId <= 0) {
+            return WalletResponse.error("Invalid wallet ID", WalletErrorType.WALLET_NOT_FOUND);
+        }
+        try {
+            BigDecimal amountToSubtract = new BigDecimal(amount);
+            if (amountToSubtract.compareTo(BigDecimal.ZERO) <= 0) {
+                return WalletResponse.error("Invalid amount", WalletErrorType.INVALID_AMOUNT);
+            }
+        } catch (NumberFormatException e) {
+            return WalletResponse.error("Invalid amount format", WalletErrorType.INVALID_AMOUNT);
+        }
+        
+        try {
+            Wallet wallet = walletRepository.findById(walletId)
+                    .orElseThrow(() -> new RuntimeException("Wallet not found"));
+            BigDecimal amountToSubtract = new BigDecimal(amount);
+            BigDecimal currentBalance = wallet.getBalance();
+            if (currentBalance.compareTo(amountToSubtract) < 0) {
+                return WalletResponse.error(
+                    String.format("Insufficient balance. Current: %s %s", 
+                        currentBalance, wallet.getCurrency()),
+                    "INSUFFICIENT_BALANCE"
+                );
+            }
 
-        // Chuyển balance từ String -> BigDecimal
-        BigDecimal currentBalance = new BigDecimal(wallet.getBalance());
-        BigDecimal amountToSubtract = new BigDecimal(amount);
-
-        // Trừ số tiền mới vào số dư hiện tại
-        BigDecimal newBalance = currentBalance.subtract(amountToSubtract);
-
-        // Cập nhật lại balance (chuyển về String trước khi lưu)
-        wallet.setBalance(newBalance.toString());
-        walletRepository.save(wallet);
+            BigDecimal newBalance = currentBalance.subtract(amountToSubtract);
+            wallet.setBalance(newBalance);
+            walletRepository.save(wallet);
+            return WalletResponse.success(currentBalance, newBalance);
+            
+        } catch (Exception e) {
+            log.error("Error decreasing balance: {}", e.getMessage());
+            return WalletResponse.error("System error", "SYSTEM_ERROR");
+        }
     }
 
     public Wallet createWallet(Integer userId) {
         Wallet wallet = new Wallet();
         wallet.setUserId(userId);
-        wallet.setBalance("0");
+        wallet.setBalance(BigDecimal.ZERO);
         wallet.setCurrency("VND");
         return walletRepository.save(wallet);
     }

@@ -1,20 +1,21 @@
 package com.manager.bank.entities;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.persistence.Index;
 
 @Entity
 @Table(name = "wallets", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "stk")
 }, indexes = {
-        @Index(name = "idx_stk", columnList = "stk")
+    @Index(name = "idx_userId", columnList = "userId")
 })
 public class Wallet extends Base {
     @Id
@@ -22,14 +23,13 @@ public class Wallet extends Base {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "wallet_seq")
     private int id;
 
-    @NotBlank(message = "userId is required")
     private Integer userId;
 
     @NotBlank(message = "currency is required")
     private String currency;
 
-    @NotBlank(message = "balance is required")
-    private String balance;
+    @NotNull(message = "balance is required")
+    private BigDecimal balance;
 
     public Wallet() {
     }
@@ -58,11 +58,11 @@ public class Wallet extends Base {
         this.currency = currency;
     }
 
-    public String getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 }

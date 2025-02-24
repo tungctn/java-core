@@ -43,7 +43,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void createUser(RegisterRequest request) {
+    public User createUser(RegisterRequest request) {
         String email = request.getEmail().trim().toLowerCase();
         String phoneNumber = request.getPhoneNumber().trim();
         String firstName = request.getFirstName().trim();
@@ -58,7 +58,7 @@ public class UserService {
         newUser.setLastName(lastName);
         newUser.setPassword(hashedPassword);
 
-        userRepository.save(newUser);
+        return userRepository.save(newUser);
     }
 
     public UserDTO UpdateUser(Integer userId, UpdateRequest request) {

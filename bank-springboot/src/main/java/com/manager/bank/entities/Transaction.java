@@ -29,23 +29,26 @@ public class Transaction extends Base {
     @Id
     @SequenceGenerator(name = "transaction_seq", sequenceName = "transaction_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_seq")
-    private int id;
+    private Integer id;
+
+    @Column(name = "user_id")
+    private Integer userId;
 
     @Nullable
     @Column(nullable = true)
-    private int fromUser = 0;
+    private Integer fromUser = 0;
 
     @Nullable
     @Column(nullable = true)
-    private int toUser = 0;
+    private Integer toUser = 0;
 
     @Nullable
     @Column(nullable = true)
-    private int toBankId = 0;
+    private Integer toBankId = 0;
 
     @Nullable
     @Column(nullable = true)
-    private int fromBankId = 0;
+    private Integer fromBankId = 0;
 
     @NotBlank(message = "amount is required")
     private String amount;
@@ -65,43 +68,51 @@ public class Transaction extends Base {
     public Transaction() {
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getFromUser() {
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getFromUser() {
         return fromUser;
     }
 
-    public void setFromUser(int fromUser) {
+    public void setFromUser(Integer fromUser) {
         this.fromUser = fromUser;
     }
 
-    public int getToUser() {
+    public Integer getToUser() {
         return toUser;
     }
 
-    public void setToUser(int toUser) {
+    public void setToUser(Integer toUser) {
         this.toUser = toUser;
     }
 
-    public int getToBankId() {
+    public Integer getToBankId() {
         return toBankId;
     }
 
-    public void setToBankId(int toBankId) {
+    public void setToBankId(Integer toBankId) {
         this.toBankId = toBankId;
     }
 
-    public int getFromBankId() {
+    public Integer getFromBankId() {
         return fromBankId;
     }
 
-    public void setFromBankId(int fromBankId) {
+    public void setFromBankId(Integer fromBankId) {
         this.fromBankId = fromBankId;
     }
     public String getAmount() {

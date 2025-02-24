@@ -19,6 +19,8 @@ import com.manager.bank.services.JwtService;
 import com.manager.bank.services.UserService;
 import com.manager.bank.services.WalletService;
 
+import jakarta.transaction.Transactional;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -52,16 +54,18 @@ public class AuthController {
         )));
     }
 
-    @SuppressWarnings("null")
+    @Transactional
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<String>> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> register(@RequestBody RegisterRequest request) {
         User user = userRepository.findByPhoneNumberOrEmail(request.getPhoneNumber(), request.getEmail());
         if (user != null) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse<>(false, "Email or PhoneNumber already", null));
         }
-        userService.createUser(request);
-        walletService.createWallet(user.getId());
-        return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", null));
+        User newUser = userService.createUser(request);
+        walletService.createWallet(newUser.getId());
+        return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully", Map.of(
+            "token", jwtService.generateToken(newUser)
+        )));
     }
 }
