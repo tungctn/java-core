@@ -28,7 +28,16 @@ public class LinkBankController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(new ApiResponse<>(false, "Unauthorized", null));
         }
-        LinkBank newLinkBank = linkBankService.createLinkBank(request, userId);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Link bank created successfully", newLinkBank));
+        
+        try {
+            LinkBank newLinkBank = linkBankService.createLinkBank(request, userId);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Link bank created successfully", newLinkBank));
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ApiResponse<>(false, "Account number already exists", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponse<>(false, "Error creating link bank: " + e.getMessage(), null));
+        }
     }
 }

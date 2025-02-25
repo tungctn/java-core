@@ -1,5 +1,7 @@
 package com.manager.bank.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,11 @@ public class LinkBankService {
 
     // liên kết ngân hàng
     public LinkBank createLinkBank(LinkBankRequest request, Integer userId) {
+        // Kiểm tra xem accountNumber đã tồn tại chưa
+        if (linkBankRepository.existsByAccountNumber(request.getAccountNumber())) {
+            throw new RuntimeException("Account number already exists");
+        }
+        
         LinkBank newLinkBank = new LinkBank();
         newLinkBank.setUserId(userId);
         newLinkBank.setAccountName(request.getAccountName().trim().toUpperCase());
@@ -27,6 +34,10 @@ public class LinkBankService {
             linkBankRepository.save(linkBank);
         }
         return linkBank;
+    }
+
+    public List<LinkBank> getLinkBankByUserId(int userId) {
+        return linkBankRepository.findByUserId(userId);
     }
 
     public LinkBank getLinkBankById(int id) {

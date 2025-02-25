@@ -22,7 +22,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtService jwtService;
     @Autowired
-    private ObjectMapper objectMapper;  // để convert object -> JSON
+    private ObjectMapper objectMapper;  
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

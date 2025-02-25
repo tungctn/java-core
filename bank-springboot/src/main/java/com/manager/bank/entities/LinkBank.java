@@ -9,13 +9,18 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "link_banks", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"account_number"})
+}, indexes = {
+    @Index(columnList = "account_number")
 })
 public class LinkBank extends Base {
     @Id

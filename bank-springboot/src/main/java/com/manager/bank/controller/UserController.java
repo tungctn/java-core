@@ -1,5 +1,8 @@
 package com.manager.bank.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +18,11 @@ import com.manager.bank.dto.user.CreateRequest;
 import com.manager.bank.dto.user.UpdateRequest;
 import com.manager.bank.dto.user.UserDTO;
 import com.manager.bank.entities.User;
+import com.manager.bank.entities.Wallet;
+import com.manager.bank.services.LinkBankService;
 import com.manager.bank.services.UserService;
+import com.manager.bank.services.WalletService;
+import com.manager.bank.entities.LinkBank;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -24,12 +31,22 @@ import jakarta.servlet.http.HttpServletRequest;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private WalletService walletService;
+    @Autowired
+    private LinkBankService linkBankService;
 
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserDTO>> getProfile(HttpServletRequest request) {
-        Integer userId = (Integer) request.getAttribute("userId");
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getProfile(HttpServletRequest request) {
         // Sử dụng userId đã được set từ interceptor
-        return ResponseEntity.ok(new ApiResponse<>(true, "Profile fetched successfully", userService.getUser(userId)));
+        Integer userId = (Integer) request.getAttribute("userId");
+
+        // Lấy thông tin về wallet
+        Wallet wallet = walletService.getWalletByUserId(userId);
+
+        // Lấy thoong tin về link bank
+        List<LinkBank> linkBanks = linkBankService.getLinkBankByUserId(userId);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Profile fetched successfully", Map.of("info", userService.getUser(userId), "wallet", wallet, "linkBanks", linkBanks)));
     }
 
     @PostMapping("/change-password")

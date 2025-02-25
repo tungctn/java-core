@@ -89,4 +89,8 @@ public class WalletService {
         wallet.setCurrency("VND");
         return walletRepository.save(wallet);
     }
+
+    public Wallet getWalletByUserId(Integer userId) {
+        return walletRepository.findByUserId(userId);
+    }
 }
