@@ -1,15 +1,18 @@
+import { RootState } from "@/store/store";
+import { useAppSelector } from "@/store/store";
 import { useState } from "react";
 
 export const useMetrics = () => {
   const [hideBalances, setHideBalances] = useState(false);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const metrics = {
-    totalTransactions: 43,
+    totalTransactions: user?.overviewTransaction?.totalTransactions,
     transactionsChange: 12,
-    totalInflow: 24560000,
+    totalInflow: user?.overviewTransaction?.totalIncoming,
     inflowChange: 8.5,
-    totalOutflow: 18720000,
+    totalOutflow: user?.overviewTransaction?.totalOutgoing,
     outflowChange: -3.2,
-    netBalance: 5840000,
+    netBalance: user?.wallet?.balance,
     netBalanceChange: 15.7,
     successRate: 96.5,
     successRateChange: 2.1,

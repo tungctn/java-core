@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 import { useTranslation } from "@/hooks/use-translation";
-import { formatMoney } from "@/lib/helper";
+import { formatDate, formatMoney } from "@/lib/helper";
 import { useTransaction } from "../hooks/use-transaction";
 
 const getStatusColor = (status: string) => {
@@ -22,6 +22,21 @@ const getStatusColor = (status: string) => {
 export default function TransactionList() {
   const { t } = useTranslation();
   const { transactions } = useTransaction();
+  //  [
+  //    {
+  //      id: 11,
+  //      userId: null,
+  //      fromUser: 0,
+  //      toUser: 1,
+  //      toBankId: 0,
+  //      fromBankId: 2,
+  //      amount: "1000000",
+  //      currency: "VND",
+  //      description: "Deposit 1000000 VND from NGUYEN THANH TUNG-1028848006",
+  //      transactionType: "DEPOSIT",
+  //      status: "COMPLETED",
+  //    },
+  //  ];
   return (
     <Card>
       <CardContent className="p-0">
@@ -35,12 +50,12 @@ export default function TransactionList() {
                 <div className="flex items-start gap-4">
                   <div
                     className={`mt-1 h-8 w-8 rounded-full flex items-center justify-center ${
-                      transaction?.type === "incoming"
+                      transaction?.transactionType === "DEPOSIT"
                         ? "bg-emerald-50 dark:bg-emerald-950/50"
                         : "bg-rose-50 dark:bg-rose-950/50"
                     }`}
                   >
-                    {transaction?.type === "incoming" ? (
+                    {transaction?.transactionType === "DEPOSIT" ? (
                       <ArrowUpCircle className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                     ) : (
                       <ArrowDownCircle className="h-5 w-5 text-rose-600 dark:text-rose-400" />
@@ -52,7 +67,8 @@ export default function TransactionList() {
                     </h4>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="text-sm text-slate-500 dark:text-slate-400">
-                        {new Date(transaction?.date).toLocaleString()}
+                        {/* {new Date(transaction?.createdAt).toLocaleString()} */}
+                        {formatDate(transaction?.createdAt)}
                       </span>
                       <span className="text-slate-300 dark:text-slate-600">
                         •
@@ -66,12 +82,12 @@ export default function TransactionList() {
                 <div className="text-right">
                   <span
                     className={`font-medium ${
-                      transaction?.type === "incoming"
+                      transaction?.transactionType === "DEPOSIT"
                         ? "text-emerald-600 dark:text-emerald-400"
                         : "text-rose-600 dark:text-rose-400"
                     }`}
                   >
-                    {transaction?.type === "incoming" ? "+" : "-"}
+                    {transaction?.transactionType === "DEPOSIT" ? "+" : "-"}
                     {formatMoney(transaction?.amount)}
                   </span>
                   <div className="mt-1">

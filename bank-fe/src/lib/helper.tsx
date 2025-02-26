@@ -36,6 +36,21 @@ export function urlParseParams(objectParse: any = {}) {
   return str.join("&");
 }
 
+// format date to dd/mm/yyyy hh:mm:ss
+export function formatDate(date: any) {
+  if (date) {
+    return new Date(date).toLocaleString("vi-VN", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  }
+  return null;
+}
+
 export function formatMoney(x: any, decimal = 0) {
   try {
     if (x) {
