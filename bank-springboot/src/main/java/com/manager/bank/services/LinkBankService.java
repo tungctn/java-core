@@ -1,12 +1,16 @@
 package com.manager.bank.services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.manager.bank.dto.linkBank.LinkBankRequest;
 import com.manager.bank.entities.LinkBank;
+import com.manager.bank.entities.Bank;
 import com.manager.bank.entities.ENUM;
 import com.manager.bank.repositories.LinkBankRepository;
 
@@ -14,6 +18,9 @@ import com.manager.bank.repositories.LinkBankRepository;
 public class LinkBankService {
     @Autowired
     private LinkBankRepository linkBankRepository;
+
+    @Autowired
+    private BankService bankService;
 
     // liên kết ngân hàng
     public LinkBank createLinkBank(LinkBankRequest request, Integer userId) {
@@ -36,8 +43,22 @@ public class LinkBankService {
         return linkBank;
     }
 
-    public List<LinkBank> getLinkBankByUserId(int userId) {
-        return linkBankRepository.findByUserId(userId);
+    public List<Object> getLinkBankByUserId(int userId) {
+        List<LinkBank> linkBanks = linkBankRepository.findByUserId(userId);
+        List<Object> banks = new ArrayList<>();
+
+        for (LinkBank linkBank : linkBanks) {
+            Bank bank = bankService.getBankById(linkBank.getBankId());
+            if(bank != null) {
+                Map<String, Object> bankInfo = new HashMap<>();
+                bankInfo.put("id", linkBank.getId());
+                bankInfo.put("name", bank.getShortName());
+                bankInfo.put("logoUrl", bank.getLogo());
+                bankInfo.put("accountNumber", linkBank.getAccountNumber());
+                banks.add(bankInfo);
+            }
+        }
+        return banks;
     }
 
     public LinkBank getLinkBankById(int id) {

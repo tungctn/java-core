@@ -10,6 +10,7 @@ import { BankSelection } from "@/sections/banks/components/bank-selection";
 import { BankLinkForm } from "@/sections/banks/components/bank-link-form";
 import { URL_LIST } from "@/lib/config_global";
 import { useRouter } from "next/navigation";
+import API from "@/services/API";
 
 export default function CreateBankLink() {
   const { t } = useTranslation();
@@ -22,10 +23,16 @@ export default function CreateBankLink() {
     setStep(2);
   };
 
-  const handleSubmit = (data: any) => {
+  const handleSubmit = async (data: any) => {
     console.log(data);
-    // Xử lý logic liên kết ngân hàng
-    router.push(URL_LIST.root.home);
+    try {
+        const response = await API.LinkBank.sendEmailLogin(data);
+        console.log('Kết quả từ API:', response);
+
+        router.push(URL_LIST.root.home);
+    } catch (error) {
+        console.error('Lỗi khi gọi API:', error);
+    }
   };
 
   return (

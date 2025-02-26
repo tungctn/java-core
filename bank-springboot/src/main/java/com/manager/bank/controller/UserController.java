@@ -45,7 +45,7 @@ public class UserController {
         Wallet wallet = walletService.getWalletByUserId(userId);
 
         // Lấy thoong tin về link bank
-        List<LinkBank> linkBanks = linkBankService.getLinkBankByUserId(userId);
+        List<Object> linkBanks = linkBankService.getLinkBankByUserId(userId);
         return ResponseEntity.ok(new ApiResponse<>(true, "Profile fetched successfully", Map.of("info", userService.getUser(userId), "wallet", wallet, "linkBanks", linkBanks)));
     }
 

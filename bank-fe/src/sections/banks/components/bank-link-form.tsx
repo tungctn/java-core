@@ -27,10 +27,10 @@ export function BankLinkForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
-      bank: selectedBank,
+      bankId: selectedBank?.id,
       accountNumber,
       userId: user?.id,
-      fullName: `${user?.info?.firstName} ${user?.info?.lastName}`,
+      accountName: `${user?.info?.firstName} ${user?.info?.lastName}`,
       personalId,
     });
   };
