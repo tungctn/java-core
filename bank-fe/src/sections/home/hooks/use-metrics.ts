@@ -14,7 +14,7 @@ export const useMetrics = () => {
     outflowChange: -3.2,
     netBalance: user?.wallet?.balance,
     netBalanceChange: 15.7,
-    successRate: 96.5,
+    successRate: user?.overviewTransaction?.successRate,
     successRateChange: 2.1,
   };
 
