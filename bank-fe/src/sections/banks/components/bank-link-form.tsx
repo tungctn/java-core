@@ -1,9 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-
 import { Label } from "@/components/ui/label";
-
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/use-translation";
 import Image from "next/image";
@@ -24,6 +22,7 @@ export function BankLinkForm({
 }: BankLinkFormProps) {
   const { t } = useTranslation();
   const [accountNumber, setAccountNumber] = useState("");
+  const [personalId, setPersonalId] = useState(user?.cccd || "");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +30,8 @@ export function BankLinkForm({
       bank: selectedBank,
       accountNumber,
       userId: user?.id,
-      fullName: `${user?.firstName} ${user?.lastName}`,
+      fullName: `${user?.info?.firstName} ${user?.info?.lastName}`,
+      personalId,
     });
   };
 
@@ -53,8 +53,7 @@ export function BankLinkForm({
         </div>
         <Button
           type="button"
-          variant="ghost"
-          className="ml-auto"
+          className="ml-auto cursor-pointer z-10"
           onClick={onBack}
         >
           {t("Change")}
@@ -65,8 +64,8 @@ export function BankLinkForm({
         <div>
           <Label>{t("Full Name")}</Label>
           <Input
-            value={`${user?.firstName?.toUpperCase()} ${user?.lastName?.toUpperCase()}`}
-            disabled
+            value={`${user?.info?.firstName?.toUpperCase()} ${user?.info?.lastName?.toUpperCase()}`}
+            readOnly
             className="bg-slate-50"
           />
         </div>
@@ -84,7 +83,8 @@ export function BankLinkForm({
         <div>
           <Label>{t("Personal ID")}</Label>
           <Input
-            value={user?.cccd || ""}
+            value={personalId}
+            onChange={(e) => setPersonalId(e.target.value)}
             placeholder={t("Enter your personal ID")}
           />
         </div>

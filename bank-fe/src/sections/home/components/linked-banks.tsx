@@ -7,7 +7,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatMoney } from "@/lib/helper";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -28,12 +27,13 @@ import React from "react";
 import { useTranslation } from "@/hooks/use-translation";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
-import { useBanks } from "../hooks/use-banks";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/store/store";
+import { RootState } from "@/store/store";
 export default function LinkedBanks() {
   const { t } = useTranslation();
-  const { hideBalances, linkedBanks } = useBanks();
   const router = useRouter();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const maskAccountNumber = (accNumber: any) => {
     if (!accNumber) return "";
@@ -60,7 +60,7 @@ export default function LinkedBanks() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {linkedBanks.map((bank, index) => (
+        {user?.linkedBanks?.map((bank: any, index: number) => (
           <motion.div
             key={bank.id}
             initial={{ opacity: 0, y: 20 }}
@@ -158,9 +158,6 @@ export default function LinkedBanks() {
                         {t("Reconnect Required")}
                       </Badge>
                     )}
-                  </div>
-                  <div className="text-2xl font-bold text-slate-900 dark:text-slate-50">
-                    {hideBalances ? "•••••••" : formatMoney(bank.balance)}
                   </div>
 
                   <div className="mt-6 flex gap-2">

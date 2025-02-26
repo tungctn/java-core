@@ -50,11 +50,11 @@ export function UserDropdown() {
         <div className="flex items-center gap-3 p-1.5 rounded-full cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
           <div className="relative">
             <Avatar className="h-8 w-8 ring-2 ring-white dark:ring-slate-800 shadow-sm">
-              <AvatarImage src={user?.avatar} />
+              <AvatarImage src={user?.info?.avatar} />
               <AvatarFallback
                 className={`${userColor} text-white font-semibold`}
               >
-                {user?.firstName?.charAt(0)}
+                {user?.info?.firstName?.charAt(0)}
               </AvatarFallback>
             </Avatar>
             <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border-2 border-white dark:border-slate-800"></span>
@@ -62,12 +62,12 @@ export function UserDropdown() {
           <div className="hidden md:block">
             <div className="flex items-center gap-1">
               <span className="text-sm font-medium">
-                {user?.firstName} {user?.lastName}
+                {user?.info?.firstName} {user?.info?.lastName}
               </span>
               <ChevronsUpDown className="h-3.5 w-3.5 text-slate-500" />
             </div>
             <span className="text-xs text-slate-500 dark:text-slate-400">
-              {user?.email}
+              {user?.info?.email}
             </span>
           </div>
         </div>
@@ -77,27 +77,27 @@ export function UserDropdown() {
         <div className="p-2">
           <div className="flex items-center gap-3 rounded-lg p-2.5 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 mb-2">
             <Avatar className="h-10 w-10 ring-2 ring-white/90 dark:ring-slate-800 shadow-md">
-              <AvatarImage src={user?.avatar} />
+              <AvatarImage src={user?.info?.avatar} />
               <AvatarFallback
                 className={`${userColor} text-white font-semibold`}
               >
-                {user?.firstName?.charAt(0)}
+                {user?.info?.firstName?.charAt(0)}
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-slate-800 dark:text-slate-200">
-                  {user?.firstName} {user?.lastName}
+                  {user?.info?.firstName} {user?.info?.lastName}
                 </span>
                 <Badge
                   variant="outline"
                   className="bg-indigo-50 text-indigo-600 text-[10px] border-indigo-200 dark:bg-indigo-950/50 dark:border-indigo-800/60 dark:text-indigo-400"
                 >
-                  {user?.role}
+                  {user?.info?.role}
                 </Badge>
               </div>
               <span className="text-xs text-slate-600 dark:text-slate-400 truncate max-w-[160px]">
-                {user?.email}
+                {user?.info?.email}
               </span>
             </div>
           </div>

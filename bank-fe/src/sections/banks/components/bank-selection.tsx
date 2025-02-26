@@ -1,33 +1,18 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-
 import { Search } from "lucide-react";
-
-import { ALL_BANK } from "@/constants/all_bank";
 import { useTranslation } from "@/hooks/use-translation";
 import Image from "next/image";
+import { useBank } from "../hooks/use-bank";
 
 interface BankSelectionProps {
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
   onBankSelect: (bank: any) => void;
 }
 
-export function BankSelection({
-  searchTerm,
-  onSearchChange,
-  onBankSelect,
-}: BankSelectionProps) {
+export function BankSelection({ onBankSelect }: BankSelectionProps) {
   const { t } = useTranslation();
-
-  const filteredBanks = ALL_BANK.filter(
-    (bank) =>
-      bank.isTransfer &&
-      (bank.shortName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        bank.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
-
+  const { filterBanks, searchTerm, setSearchTerm } = useBank();
   return (
     <div className="space-y-4">
       <div className="relative">
@@ -36,31 +21,31 @@ export function BankSelection({
           type="text"
           placeholder={t("Search bank...")}
           value={searchTerm}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)}
           className="pl-10"
         />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 max-h-[400px] overflow-y-auto pr-2">
-        {filteredBanks.map((bank) => (
+        {filterBanks?.map((bank) => (
           <button
-            key={bank.id}
+            key={bank?.id}
             className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-colors"
             onClick={() => onBankSelect(bank)}
           >
             <div className="h-10 w-10 relative flex-shrink-0">
               <Image
-                src={bank.logo}
-                alt={bank.shortName}
+                src={bank?.logo}
+                alt={bank?.shortName}
                 className="rounded object-contain"
                 fill
                 sizes="40px"
               />
             </div>
             <div className="flex flex-col items-start">
-              <span className="font-medium text-sm">{bank.shortName}</span>
+              <span className="font-medium text-sm">{bank?.shortName}</span>
               <span className="text-xs text-slate-500 line-clamp-1">
-                {bank.name}
+                {bank?.name}
               </span>
             </div>
           </button>

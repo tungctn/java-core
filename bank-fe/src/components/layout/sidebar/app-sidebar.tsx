@@ -1,7 +1,7 @@
 // app-sidebar.tsx
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Sidebar, SidebarContent, SidebarRail } from "@/components/ui/sidebar";
 import { useNavigation } from "@/hooks/use-navigation";
@@ -17,19 +17,20 @@ import { formatMoney } from "@/lib/helper";
 import { useTranslation } from "@/hooks/use-translation";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import { RootState, useAppSelector } from "@/store/store";
+import { URL_LIST } from "@/lib/config_global";
 
 export function AppSidebar() {
   const { navMain } = useNavigation();
   const [hoveredItem, setHoveredItem] = useState(null);
   const { t } = useTranslation();
-  const totalBalance = 42850.75;
-  const connectedBanks = 3;
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   // Demo data - Có thể lấy từ API trong thực tế
-  const [quickActions, setQuickActions] = useState([
-    { id: 1, name: t("Transfer Money"), url: "/transfer" },
-    { id: 2, name: t("Pay Bills"), url: "/bills" },
-    { id: 3, name: t("Top Up"), url: "/topup" },
+  const [quickActions] = useState([
+    { id: 1, name: t("Transfer Money"), url: URL_LIST.root.transfer  },
+    // { id: 2, name: t("Pay Bills"), url: URL_LIST.root.bills },
+    // { id: 3, name: t("Top Up"), url: URL_LIST.root.topup },
   ]);
 
   return (
@@ -55,11 +56,11 @@ export function AppSidebar() {
                   variant="secondary"
                   className="bg-white/20 hover:bg-white/30 text-white text-[10px]"
                 >
-                  {connectedBanks} {t("Banks")}
+                  {user?.linkedBanks?.length ?? 0} {t("Banks")}
                 </Badge>
               </div>
               <div className="mt-1 text-xl font-bold text-white">
-                {formatMoney(totalBalance)}
+                {formatMoney(user?.wallet?.balance)} VNĐ
               </div>
               <div className="mt-2 flex items-center text-xs text-white/80">
                 <svg

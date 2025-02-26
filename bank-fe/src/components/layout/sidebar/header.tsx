@@ -2,13 +2,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useAppSelector } from "@/store/store";
-import { RootState } from "@/store/store";
 import Image from "next/image";
 import Link from "next/link";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { UserDropdown } from "../../../sections/home/components/user-dropdown";
+import { UserDropdown } from "./user-dropdown";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
