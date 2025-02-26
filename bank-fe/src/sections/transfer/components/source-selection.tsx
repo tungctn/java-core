@@ -5,6 +5,7 @@ import { Wallet, Building2 } from "lucide-react";
 import { useTranslation } from "@/hooks/use-translation";
 import { formatMoney } from "@/lib/helper";
 import Image from "next/image";
+import { RootState, useAppSelector } from "@/store/store";
 
 interface SourceSelectionProps {
   selectedSource: "wallet" | "bank";
@@ -30,7 +31,7 @@ export function SourceSelection({
   linkedBanks,
 }: SourceSelectionProps) {
   const { t } = useTranslation();
-
+  const { user } = useAppSelector((state: RootState) => state.auth);
   return (
     <Card>
       <CardHeader>
@@ -42,7 +43,7 @@ export function SourceSelection({
         <Tabs
           defaultValue="wallet"
           value={selectedSource}
-          onValueChange={(value) =>
+          onValueChange={(value: "wallet" | "bank") =>
             setSelectedSource(value as "wallet" | "bank")
           }
         >
@@ -62,7 +63,9 @@ export function SourceSelection({
               <div className="text-sm text-slate-500 dark:text-slate-400">
                 {t("Available Balance")}
               </div>
-              <div className="text-2xl font-bold">{formatMoney(balance)}</div>
+              <div className="text-2xl font-bold">
+                {formatMoney(user?.wallet?.balance)}
+              </div>
             </div>
           </TabsContent>
 

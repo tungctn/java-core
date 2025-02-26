@@ -1,7 +1,9 @@
 package com.manager.bank.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,10 +40,40 @@ public class TransactionService {
     }
 
     public List<Transaction> getListTransaction(Integer userId) {
-        List<Transaction> transactions = transactionRepository.findByUserId(userId);
-        if (transactions.isEmpty()) {
+        List<Transaction> transactionToUser = transactionRepository.findByToUser(userId);
+        List<Transaction> transactionFromUser = transactionRepository.findByFromUser(userId);
+        if (transactionToUser.isEmpty() && transactionFromUser.isEmpty()) {
             return new ArrayList<>();
         }
+
+        List<Transaction> transactions = new ArrayList<>(transactionToUser);
+        transactions.addAll(transactionFromUser);
         return transactions;
+    }
+
+    public Map<String, Object>getOverviewTransaction(Integer userId) {
+        List<Transaction> transactionFromUser = transactionRepository.findByFromUser(userId);
+        List<Transaction> transactionToUser = transactionRepository.findByToUser(userId);
+        
+        // Tính tổng số giao dịch
+        int totalTransactions = transactionFromUser.size() + transactionToUser.size();
+        
+        // Tính tổng tiền ra (từ người dùng)
+        double totalOutgoing = transactionFromUser.stream()
+            .mapToDouble(t -> Double.parseDouble(t.getAmount()))
+            .sum();
+        
+        // Tính tổng tiền vào (đến người dùng)
+        double totalIncoming = transactionToUser.stream()
+            .mapToDouble(t -> Double.parseDouble(t.getAmount()))
+            .sum();
+        
+        // Tạo map chứa thông tin tổng quan
+        Map<String, Object> summaryMap = new HashMap<>();
+        summaryMap.put("totalTransactions", totalTransactions);
+        summaryMap.put("totalOutgoing", totalOutgoing);
+        summaryMap.put("totalIncoming", totalIncoming);
+                
+        return summaryMap;
     }
 }

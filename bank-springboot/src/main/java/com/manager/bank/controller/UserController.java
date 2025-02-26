@@ -20,6 +20,7 @@ import com.manager.bank.dto.user.UserDTO;
 import com.manager.bank.entities.User;
 import com.manager.bank.entities.Wallet;
 import com.manager.bank.services.LinkBankService;
+import com.manager.bank.services.TransactionService;
 import com.manager.bank.services.UserService;
 import com.manager.bank.services.WalletService;
 import com.manager.bank.entities.LinkBank;
@@ -36,6 +37,9 @@ public class UserController {
     @Autowired
     private LinkBankService linkBankService;
 
+    @Autowired
+    private TransactionService transactionService;
+
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<Map<String, Object>>> getProfile(HttpServletRequest request) {
         // Sử dụng userId đã được set từ interceptor
@@ -46,7 +50,10 @@ public class UserController {
 
         // Lấy thoong tin về link bank
         List<Object> linkBanks = linkBankService.getLinkBankByUserId(userId);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Profile fetched successfully", Map.of("info", userService.getUser(userId), "wallet", wallet, "linkBanks", linkBanks)));
+
+        // Lấy thông tin tổng quan giao dịch
+        Map<String, Object> overviewTransaction = transactionService.getOverviewTransaction(userId);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Profile fetched successfully", Map.of("info", userService.getUser(userId), "wallet", wallet, "linkBanks", linkBanks, "overviewTransaction", overviewTransaction)));
     }
 
     @PostMapping("/change-password")
