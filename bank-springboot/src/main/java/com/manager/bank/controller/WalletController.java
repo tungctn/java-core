@@ -9,8 +9,10 @@ import jakarta.transaction.Transactional;
 
 import com.manager.bank.config.ApiResponse;
 import com.manager.bank.dto.transaction.CreateRequest;
+import com.manager.bank.dto.user.UserDTO;
 import com.manager.bank.dto.wallet.*;
 import com.manager.bank.entities.LinkBank;
+import com.manager.bank.entities.User;
 import com.manager.bank.entities.Wallet;
 import com.manager.bank.entities.ENUM;
 import com.manager.bank.repositories.WalletRepository;
@@ -20,68 +22,88 @@ import com.manager.bank.services.*;
 @RequestMapping("/api/wallet")
 public class WalletController {
 
-    @Autowired private WalletRepository walletRepository;
-    @Autowired private BankService bankService;
-    @Autowired private LinkBankService linkBankService;
-    @Autowired private TransactionService transactionService;
-    @Autowired private WalletService walletService;
+    @Autowired
+    private WalletRepository walletRepository;
+    @Autowired
+    private LinkBankService linkBankService;
+    @Autowired
+    private TransactionService transactionService;
+    @Autowired
+    private WalletService walletService;
+    @Autowired
+    private UserService userService;
 
     @Transactional
     @PostMapping("/withdraw")
-    public ResponseEntity<ApiResponse<String>> withdraw(@RequestBody WithdrawRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<ApiResponse<String>> withdraw(@RequestBody WithdrawRequest request,
+            HttpServletRequest httpRequest) {
         Integer userId = (Integer) httpRequest.getAttribute("userId");
         Wallet wallet = validateWallet(userId);
         LinkBank linkBank = linkBankService.getLinkBankById(request.getLinkBankId());
-        if (wallet == null) return ResponseEntity.ok(new ApiResponse<>(false, "Wallet not found", null));
+        if (wallet == null)
+            return ResponseEntity.ok(new ApiResponse<>(false, "Wallet not found", null));
         // Trừ số dư trước khi tạo transaction
         WalletResponse walletResponse = walletService.decreaseBalance(userId, request.getAmount().toString());
-        if (!walletResponse.isSuccess()) return ResponseEntity.ok(new ApiResponse<>(false, walletResponse.getMessage(), null));
+        if (!walletResponse.isSuccess())
+            return ResponseEntity.ok(new ApiResponse<>(false, walletResponse.getMessage(), null));
         wallet.setBalance(walletResponse.getCurrentBalance());
         walletRepository.save(wallet);
         // Transaction chính: Rút tiền từ ví đến ngân hàng
-        String descriptionWithdrawFromWallet = "Withdraw " + request.getAmount() + " " + wallet.getCurrency() + " to " + linkBank.getAccountName() + "-" + linkBank.getAccountNumber();
-        createTransaction(userId, 0,0, linkBank.getBankId(), wallet.getCurrency(), request.getAmount(), ENUM.TransactionType.WITHDRAW, descriptionWithdrawFromWallet);
+        String descriptionWithdrawFromWallet = "Withdraw " + request.getAmount() + " " + wallet.getCurrency() + " to "
+                + linkBank.getAccountName() + "-" + linkBank.getAccountNumber();
+        createTransaction(userId, 0, 0, linkBank.getBankId(), wallet.getCurrency(), request.getAmount(),
+                ENUM.TransactionType.WITHDRAW, descriptionWithdrawFromWallet);
         return ResponseEntity.ok(new ApiResponse<>(true, "Withdraw successful", null));
     }
 
     @Transactional
     @PostMapping("/deposit")
-    public ResponseEntity<ApiResponse<String>> deposit(@RequestBody DepositRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<ApiResponse<String>> deposit(@RequestBody DepositRequest request,
+            HttpServletRequest httpRequest) {
         Integer userId = (Integer) httpRequest.getAttribute("userId");
         Wallet wallet = validateWallet(userId);
         LinkBank linkBank = linkBankService.getLinkBankById(request.getLinkBankId());
-        if (wallet == null) return ResponseEntity.ok(new ApiResponse<>(false, "Wallet not found", null));
+        if (wallet == null)
+            return ResponseEntity.ok(new ApiResponse<>(false, "Wallet not found", null));
         // Cộng số dư trước khi tạo transaction
         WalletResponse walletResponse = walletService.increaseBalance(userId, request.getAmount().toString());
-        if (!walletResponse.isSuccess()) return ResponseEntity.ok(new ApiResponse<>(false, walletResponse.getMessage(), null));
+        if (!walletResponse.isSuccess())
+            return ResponseEntity.ok(new ApiResponse<>(false, walletResponse.getMessage(), null));
         wallet.setBalance(walletResponse.getCurrentBalance());
         walletRepository.save(wallet);
         // Transaction chính: Nạp tiền từ ngân hàng vào ví
-        String descriptionDepositToWallet = "Deposit " + request.getAmount() + " " + wallet.getCurrency() + " from " + linkBank.getAccountName() + "-" + linkBank.getAccountNumber();
-        createTransaction(0, userId, linkBank.getBankId(), 0, wallet.getCurrency(), request.getAmount(), ENUM.TransactionType.DEPOSIT, descriptionDepositToWallet);   
+        String descriptionDepositToWallet = "Deposit " + request.getAmount() + " " + wallet.getCurrency() + " from "
+                + linkBank.getAccountName() + "-" + linkBank.getAccountNumber();
+        createTransaction(0, userId, linkBank.getBankId(), 0, wallet.getCurrency(), request.getAmount(),
+                ENUM.TransactionType.DEPOSIT, descriptionDepositToWallet);
         return ResponseEntity.ok(new ApiResponse<>(true, "Deposit successful", null));
     }
 
     @Transactional
     @PostMapping("/transfer")
-    public ResponseEntity<ApiResponse<String>> transfer(@RequestBody TransferRequest request, HttpServletRequest httpRequest) {
+    public ResponseEntity<ApiResponse<String>> transfer(@RequestBody TransferRequest request,
+            HttpServletRequest httpRequest) {
         Integer fromUserId = (Integer) httpRequest.getAttribute("userId");
         Wallet fromWallet = validateWallet(fromUserId);
         Wallet toWallet = validateWallet(request.getToUserId());
-        if (fromWallet == null || toWallet == null) return ResponseEntity.ok(new ApiResponse<>(false, "Wallet not found", null));
+        if (fromWallet == null || toWallet == null)
+            return ResponseEntity.ok(new ApiResponse<>(false, "Wallet not found", null));
         // Trừ số dư từ người gửi
         WalletResponse fromResponse = walletService.decreaseBalance(fromUserId, request.getAmount().toString());
-        if (!fromResponse.isSuccess()) return ResponseEntity.ok(new ApiResponse<>(false, fromResponse.getMessage(), null));
+        if (!fromResponse.isSuccess())
+            return ResponseEntity.ok(new ApiResponse<>(false, fromResponse.getMessage(), null));
         fromWallet.setBalance(fromResponse.getCurrentBalance());
         walletRepository.save(fromWallet);
         // Cộng số dư vào người nhận
-        WalletResponse toResponse = walletService.increaseBalance(request.getToUserId(), request.getAmount().toString());
-        if (!toResponse.isSuccess()) return ResponseEntity.ok(new ApiResponse<>(false, toResponse.getMessage(), null));
+        WalletResponse toResponse = walletService.increaseBalance(request.getToUserId(),
+                request.getAmount().toString());
+        if (!toResponse.isSuccess())
+            return ResponseEntity.ok(new ApiResponse<>(false, toResponse.getMessage(), null));
         toWallet.setBalance(toResponse.getCurrentBalance());
         walletRepository.save(toWallet);
         // Transaction chính: Gửi tiền từ người gửi đến người nhận
-        String descriptionTransfer = "Transfer " + request.getAmount() + " " + fromWallet.getCurrency() + " to " + toWallet.getCurrency();
-        createTransaction(fromUserId, request.getToUserId(), 0, 0, fromWallet.getCurrency(), request.getAmount().toString(), ENUM.TransactionType.TRANSFER, descriptionTransfer);
+        createTransaction(fromUserId, request.getToUserId(), 0, 0, fromWallet.getCurrency(),
+                request.getAmount().toString(), ENUM.TransactionType.TRANSFER, request.getDescription());
         return ResponseEntity.ok(new ApiResponse<>(true, "Transfer successful", null));
     }
 
@@ -89,7 +111,8 @@ public class WalletController {
         return walletRepository.findByUserId(userId);
     }
 
-    private void createTransaction(Integer fromUser, Integer toUser, Integer fromBankId, Integer toBankId, String currency, String amount, ENUM.TransactionType type, String description) {
+    private void createTransaction(Integer fromUser, Integer toUser, Integer fromBankId, Integer toBankId,
+            String currency, String amount, ENUM.TransactionType type, String description) {
         CreateRequest createRequest = new CreateRequest();
         createRequest.setAmount(amount);
         createRequest.setFromUser(fromUser);

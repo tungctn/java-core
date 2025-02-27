@@ -13,4 +13,5 @@ public class TransferRequest {
     private int fromUserId;
     private int toUserId;
     private BigDecimal amount;
+    private String description;
 }
