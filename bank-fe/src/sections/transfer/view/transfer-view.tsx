@@ -12,7 +12,6 @@ import { RecipientInformation } from "../components/recipient-information";
 import { TransferDetails } from "../components/transfer-details";
 
 // Mock data
-const MOCK_BALANCE = 5000000;
 const MOCK_LINKED_BANKS = [
   {
     id: 1,
@@ -84,7 +83,6 @@ export default function TransferView() {
             setSelectedSource={setSelectedSource}
             selectedBank={selectedBank}
             setSelectedBank={setSelectedBank}
-            balance={MOCK_BALANCE}
             linkedBanks={MOCK_LINKED_BANKS}
           />
 
