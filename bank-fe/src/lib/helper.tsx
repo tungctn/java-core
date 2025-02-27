@@ -74,6 +74,85 @@ export function formatPhoneNumber(phoneNumberString: any) {
   return null;
 }
 
+export function convertNumberToWords(num: number): string {
+  const units = [
+    "",
+    "một",
+    "hai",
+    "ba",
+    "bốn",
+    "năm",
+    "sáu",
+    "bảy",
+    "tám",
+    "chín",
+    "mười",
+    "mười một",
+    "mười hai",
+    "mười ba",
+    "mười bốn",
+    "mười lăm",
+    "mười sáu",
+    "mười bảy",
+    "mười tám",
+    "mười chín",
+  ];
+  const tens = [
+    "",
+    "",
+    "hai mươi",
+    "ba mươi",
+    "bốn mươi",
+    "năm mươi",
+    "sáu mươi",
+    "bảy mươi",
+    "tám mươi",
+    "chín mươi",
+  ];
+
+  if (num === 0) return "không";
+
+  if (num < 20) {
+    return units[num];
+  }
+
+  if (num < 100) {
+    return (
+      tens[Math.floor(num / 10)] + (num % 10 !== 0 ? " " + units[num % 10] : "")
+    );
+  }
+
+  if (num < 1000) {
+    return (
+      units[Math.floor(num / 100)] +
+      " trăm" +
+      (num % 100 !== 0 ? " " + convertNumberToWords(num % 100) : "")
+    );
+  }
+
+  if (num < 1000000) {
+    return (
+      convertNumberToWords(Math.floor(num / 1000)) +
+      " nghìn" +
+      (num % 1000 !== 0 ? " " + convertNumberToWords(num % 1000) : "")
+    );
+  }
+
+  if (num < 1000000000) {
+    return (
+      convertNumberToWords(Math.floor(num / 1000000)) +
+      " triệu" +
+      (num % 1000000 !== 0 ? " " + convertNumberToWords(num % 1000000) : "")
+    );
+  }
+
+  return (
+    convertNumberToWords(Math.floor(num / 1000000000)) +
+    " tỷ" +
+    (num % 1000000000 !== 0 ? " " + convertNumberToWords(num % 1000000000) : "")
+  );
+}
+
 export function slugify(string: any) {
   if (typeof string === "string") {
     const a =
