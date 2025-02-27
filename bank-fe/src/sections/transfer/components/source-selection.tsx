@@ -12,7 +12,6 @@ interface SourceSelectionProps {
   setSelectedSource: (value: "wallet" | "bank") => void;
   selectedBank: string;
   setSelectedBank: (value: string) => void;
-  balance: number;
   linkedBanks: Array<{
     id: number;
     bank: string;
@@ -27,7 +26,6 @@ export function SourceSelection({
   setSelectedSource,
   selectedBank,
   setSelectedBank,
-  balance,
   linkedBanks,
 }: SourceSelectionProps) {
   const { t } = useTranslation();
@@ -43,7 +41,7 @@ export function SourceSelection({
         <Tabs
           defaultValue="wallet"
           value={selectedSource}
-          onValueChange={(value: "wallet" | "bank") =>
+          onValueChange={(value: any) =>
             setSelectedSource(value as "wallet" | "bank")
           }
         >

@@ -1,6 +1,7 @@
 package com.manager.bank.services;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.manager.bank.dto.transaction.CreateRequest;
+import com.manager.bank.entities.ENUM.TransactionStatus;
 import com.manager.bank.entities.Transaction;
 import com.manager.bank.repositories.TransactionRepository;
 
 @Service
 public class TransactionService {
-    @Autowired 
+    @Autowired
     private TransactionRepository transactionRepository;
 
     public Transaction createTransaction(CreateRequest transaction) {
@@ -48,32 +50,42 @@ public class TransactionService {
 
         List<Transaction> transactions = new ArrayList<>(transactionToUser);
         transactions.addAll(transactionFromUser);
+        transactions.sort(Comparator.comparing(
+                Transaction::getCreatedAt).reversed());
         return transactions;
     }
 
-    public Map<String, Object>getOverviewTransaction(Integer userId) {
+    public Map<String, Object> getOverviewTransaction(Integer userId) {
         List<Transaction> transactionFromUser = transactionRepository.findByFromUser(userId);
         List<Transaction> transactionToUser = transactionRepository.findByToUser(userId);
-        
+
         // Tính tổng số giao dịch
         int totalTransactions = transactionFromUser.size() + transactionToUser.size();
-        
+
         // Tính tổng tiền ra (từ người dùng)
         double totalOutgoing = transactionFromUser.stream()
-            .mapToDouble(t -> Double.parseDouble(t.getAmount()))
-            .sum();
-        
+                .mapToDouble(t -> Double.parseDouble(t.getAmount()))
+                .sum();
+
         // Tính tổng tiền vào (đến người dùng)
         double totalIncoming = transactionToUser.stream()
-            .mapToDouble(t -> Double.parseDouble(t.getAmount()))
-            .sum();
-        
+                .mapToDouble(t -> Double.parseDouble(t.getAmount()))
+                .sum();
+
+        // Tỉ lệ giao dịch thanh công
+        List<Transaction> transactions = new ArrayList<>(transactionToUser);
+        transactions.addAll(transactionFromUser);
+        double successRate = (transactions.stream()
+                .filter(t -> t.getStatus().equals(TransactionStatus.COMPLETED))
+                .count() / (double) totalTransactions) * 100;
+
         // Tạo map chứa thông tin tổng quan
         Map<String, Object> summaryMap = new HashMap<>();
         summaryMap.put("totalTransactions", totalTransactions);
         summaryMap.put("totalOutgoing", totalOutgoing);
         summaryMap.put("totalIncoming", totalIncoming);
-                
+        summaryMap.put("successRate", successRate);
+
         return summaryMap;
     }
 }

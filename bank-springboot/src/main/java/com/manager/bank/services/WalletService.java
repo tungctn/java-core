@@ -14,7 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j  // Add Lombok logging
+@Slf4j // Add Lombok logging
 public class WalletService {
     @Autowired
     private WalletRepository walletRepository;
@@ -34,9 +34,9 @@ public class WalletService {
             BigDecimal newBalance = wallet.getBalance().add(amountToAdd);
             wallet.setBalance(newBalance);
             walletRepository.save(wallet);
-            
+
             return WalletResponse.success(wallet.getBalance(), newBalance);
-            
+
         } catch (Exception e) {
             log.error("Error increasing balance: {}", e.getMessage());
             return WalletResponse.error("System error", "SYSTEM_ERROR");
@@ -45,37 +45,20 @@ public class WalletService {
 
     @Transactional
     public WalletResponse decreaseBalance(int walletId, String amount) {
-        // Validate input
-        if (walletId <= 0) {
-            return WalletResponse.error("Invalid wallet ID", WalletErrorType.WALLET_NOT_FOUND);
-        }
-        try {
-            BigDecimal amountToSubtract = new BigDecimal(amount);
-            if (amountToSubtract.compareTo(BigDecimal.ZERO) <= 0) {
-                return WalletResponse.error("Invalid amount", WalletErrorType.INVALID_AMOUNT);
-            }
-        } catch (NumberFormatException e) {
-            return WalletResponse.error("Invalid amount format", WalletErrorType.INVALID_AMOUNT);
-        }
-        
         try {
             Wallet wallet = walletRepository.findById(walletId)
                     .orElseThrow(() -> new RuntimeException("Wallet not found"));
             BigDecimal amountToSubtract = new BigDecimal(amount);
             BigDecimal currentBalance = wallet.getBalance();
             if (currentBalance.compareTo(amountToSubtract) < 0) {
-                return WalletResponse.error(
-                    String.format("Insufficient balance. Current: %s %s", 
-                        currentBalance, wallet.getCurrency()),
-                    "INSUFFICIENT_BALANCE"
-                );
+                return WalletResponse.error("Insufficient balance", "INSUFFICIENT_BALANCE");
             }
-
-            BigDecimal newBalance = currentBalance.subtract(amountToSubtract);
+            BigDecimal newBalance = wallet.getBalance().subtract(amountToSubtract);
+            // log newBalance
+            log.info("New balance: {}", newBalance);
             wallet.setBalance(newBalance);
             walletRepository.save(wallet);
-            return WalletResponse.success(currentBalance, newBalance);
-            
+            return WalletResponse.success(wallet.getBalance(), newBalance);
         } catch (Exception e) {
             log.error("Error decreasing balance: {}", e.getMessage());
             return WalletResponse.error("System error", "SYSTEM_ERROR");
