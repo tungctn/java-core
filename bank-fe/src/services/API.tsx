@@ -4,7 +4,7 @@ import Email from "./API/Email";
 import Bank from "./API/Bank";
 import LinkBank from "./API/LinkBank";
 import Transaction from "./API/Transaction";
-
+import Wallet from "./API/Wallet";
 const API = {
   Auth: new Auth(),
   User: new User(),
@@ -12,6 +12,7 @@ const API = {
   Bank: new Bank(),
   LinkBank: new LinkBank(),
   Transaction: new Transaction(),
+  Wallet: new Wallet(),
 };
 
 export default API;

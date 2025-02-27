@@ -5,66 +5,58 @@ import MainLayout from "@/components/layout/main-layout";
 import { useTranslation } from "@/hooks/use-translation";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { useAppSelector } from "@/store/store";
-import { RootState } from "@/store/store";
-import { SourceSelection } from "../components/source-selection";
 import { RecipientInformation } from "../components/recipient-information";
 import { TransferDetails } from "../components/transfer-details";
-
-// Mock data
-const MOCK_LINKED_BANKS = [
-  {
-    id: 1,
-    bank: "Vietcombank",
-    accountNumber: "1023456789",
-    balance: 15000000,
-    logo: "https://api.vietqr.io/img/VCB.png",
-  },
-  {
-    id: 2,
-    bank: "TPBank",
-    accountNumber: "0987654321",
-    balance: 8000000,
-    logo: "https://api.vietqr.io/img/TPB.png",
-  },
-];
+import API from "@/services/API";
+import { toast } from "@/hooks/use-toast";
+import { useAppSelector } from "@/store/store";
+import { RootState } from "@/store/store";
+import { URL_LIST } from "@/lib/config_global";
+import { useRouter } from "next/navigation";
 
 export default function TransferView() {
   const { t } = useTranslation();
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  const [selectedSource, setSelectedSource] = useState<"wallet" | "bank">(
-    "wallet"
-  );
-  const [selectedBank, setSelectedBank] = useState<string>("");
   const [amount, setAmount] = useState<string>("");
-  const [description, setDescription] = useState<string>(
-    `${user?.firstName} ${user?.lastName} Transfer to bank`
-  );
-  const [recipientBank, setRecipientBank] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
   const [recipientAccount, setRecipientAccount] = useState<string>("");
+  const [recipientUser, setRecipientUser] = useState<any>(null);
   const [isValidatingAccount, setIsValidatingAccount] = useState(false);
-  const [recipientName, setRecipientName] = useState<string>("");
-
+  const [isValidated, setIsValidated] = useState(false);
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const router = useRouter();
   const handleValidateAccount = async () => {
-    if (!recipientAccount || !recipientBank) return;
+    if (!recipientAccount) return;
     setIsValidatingAccount(true);
-    setTimeout(() => {
-      setRecipientName("Nguyễn Văn A");
-      setIsValidatingAccount(false);
-    }, 1000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log({
-      source: selectedSource,
-      selectedBank,
       amount,
       description,
-      recipientBank,
-      recipientAccount,
-      recipientName,
+      recipientUser,
     });
+    // Gọi API chuyển tiền ở đây
+    const response = await API.Wallet.transfer({
+      amount: parseInt(amount),
+      description,
+      fromUserId: user?.info?.id,
+      toUserId: recipientUser?.id,
+    });
+    console.log(response);
+    if (response?.status === 200) {
+      toast({
+        title: t("Transfer successfully"),
+        description: t("Transfer successfully"),
+      });
+      router.push(URL_LIST.root.home);
+    } else {
+      toast({
+        title: t("Transfer failed"),
+        description: t("Transfer failed"),
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -78,32 +70,28 @@ export default function TransferView() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <SourceSelection
-            selectedSource={selectedSource}
-            setSelectedSource={setSelectedSource}
-            selectedBank={selectedBank}
-            setSelectedBank={setSelectedBank}
-            linkedBanks={MOCK_LINKED_BANKS}
-          />
-
           <RecipientInformation
-            recipientBank={recipientBank}
-            setRecipientBank={setRecipientBank}
             recipientAccount={recipientAccount}
             setRecipientAccount={setRecipientAccount}
-            recipientName={recipientName}
             isValidatingAccount={isValidatingAccount}
+            setIsValidatingAccount={setIsValidatingAccount}
+            setRecipientUser={setRecipientUser}
+            setIsValidated={setIsValidated}
+            setDescription={setDescription}
             onValidateAccount={handleValidateAccount}
           />
-
           <TransferDetails
             amount={amount}
             setAmount={setAmount}
             description={description}
             setDescription={setDescription}
           />
-
-          <Button type="submit" className="w-full" size="lg">
+          <Button
+            type="submit"
+            className="w-full"
+            size="lg"
+            disabled={!isValidated || !amount}
+          >
             {t("Continue")} <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </form>
