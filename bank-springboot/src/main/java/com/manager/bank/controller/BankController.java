@@ -17,8 +17,11 @@ import com.manager.bank.repositories.BankRepository;
 @RestController
 @RequestMapping("/api/banks")
 public class BankController {
-    @Autowired
-    private BankRepository bankRepository;
+    private final BankRepository bankRepository;
+
+    public BankController(BankRepository bankRepository) {
+        this.bankRepository = bankRepository;
+    }
 
     @PostMapping("/create")
     public void createBank(@RequestBody CreateRequest request) {
