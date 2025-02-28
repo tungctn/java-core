@@ -53,4 +53,3 @@ jobs:
           version_label: "v-${{ github.run_number }}-${{ github.sha }}"
           region: ap-southeast-1
           deployment_package: deploy.zip
-          wait_for_environment_recovery: 300
