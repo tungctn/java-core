@@ -23,23 +23,43 @@ import {
   ExternalLink,
   RefreshCw,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "@/hooks/use-translation";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAppSelector } from "@/store/store";
 import { RootState } from "@/store/store";
+import { DepositDialog } from "./deposit-dialog";
+import { WithdrawDialog } from "./withdraw-dialog";
+
 export default function LinkedBanks() {
   const { t } = useTranslation();
   const router = useRouter();
   const { user } = useAppSelector((state: RootState) => state.auth);
+
+  // State for dialog management
+  const [depositOpen, setDepositOpen] = useState(false);
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [selectedBank, setSelectedBank] = useState<any>(null);
 
   const maskAccountNumber = (accNumber: any) => {
     if (!accNumber) return "";
     const firstFour = accNumber.substring(0, 4);
     const lastFour = accNumber.substring(accNumber.length - 4);
     return `${firstFour}•••••${lastFour}`;
+  };
+
+  // Handle opening deposit dialog
+  const handleOpenDeposit = (bank: any) => {
+    setSelectedBank(bank);
+    setDepositOpen(true);
+  };
+
+  // Handle opening withdraw dialog
+  const handleOpenWithdraw = (bank: any) => {
+    setSelectedBank(bank);
+    setWithdrawOpen(true);
   };
 
   return (
@@ -149,9 +169,6 @@ export default function LinkedBanks() {
 
                   <div className="p-5 pt-8">
                     <div className="flex items-center justify-between mb-1.5">
-                      {/* <span className="text-sm font-medium text-slate-600 dark:text-slate-400">
-                        {t("Available Balance")}
-                      </span> */}
                       {!bankActive && (
                         <Badge
                           variant="outline"
@@ -168,6 +185,7 @@ export default function LinkedBanks() {
                         size="sm"
                         className="flex-1 px-1 text-sm"
                         disabled={!bankActive}
+                        onClick={() => handleOpenDeposit(bank)}
                       >
                         {t("Deposit")}
                       </Button>
@@ -176,16 +194,9 @@ export default function LinkedBanks() {
                         size="sm"
                         className="flex-1 px-1 text-sm"
                         disabled={!bankActive}
+                        onClick={() => handleOpenWithdraw(bank)}
                       >
                         {t("Withdraw")}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="flex-1 px-1 text-sm"
-                        disabled={!bankActive}
-                      >
-                        {t("Transfer")}
                       </Button>
                     </div>
                   </div>
@@ -195,6 +206,23 @@ export default function LinkedBanks() {
           );
         })}
       </div>
+
+      {/* Render dialogs */}
+      {selectedBank && (
+        <>
+          <DepositDialog
+            isOpen={depositOpen}
+            onClose={() => setDepositOpen(false)}
+            bank={selectedBank}
+          />
+
+          <WithdrawDialog
+            isOpen={withdrawOpen}
+            onClose={() => setWithdrawOpen(false)}
+            bank={selectedBank}
+          />
+        </>
+      )}
     </div>
   );
 }

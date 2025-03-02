@@ -1,7 +1,7 @@
 import MainLayout from "@/components/layout/main-layout";
 import HomeHeader from "../components/home-header";
 import MetricsOverview from "../components/metrics-overview";
-import LinkedBanks from "../components/linked-banks";
+import LinkedBanks from "../components/link-bank/linked-banks";
 export default function HomeView() {
   return (
     <MainLayout>

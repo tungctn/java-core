@@ -56,7 +56,7 @@ export function AppSidebar() {
                   variant="secondary"
                   className="bg-white/20 hover:bg-white/30 text-white text-[10px]"
                 >
-                  {user?.linkedBanks?.length ?? 0} {t("Banks")}
+                  {user?.linkBanks?.length ?? 0} {t("Banks")}
                 </Badge>
               </div>
               <div className="mt-1 text-xl font-bold text-white">
