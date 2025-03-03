@@ -14,4 +14,7 @@ export default class Auth {
   login(data: any) {
     return axiosPOST("api_gw", "/api/auth/login", data);
   }
+  register(data: any) {
+    return axiosPOST("api_gw", "/api/auth/register", data);
+  }
 }

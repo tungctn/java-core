@@ -8,8 +8,6 @@ export default function Init() {
   const token = getAuthToken();
   if (token) {
     router.push("/home");
-  } else {
-    router.push("/login");
-  }
+  } 
   return <LoadingScreen />;
 }

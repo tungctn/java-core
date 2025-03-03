@@ -9,7 +9,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../../../components/ui/form";
-import { googleClientId } from "@/lib/config_global";
+import { googleClientId, URL_LIST } from "@/lib/config_global";
 import { LogIn } from "lucide-react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useTranslation } from "@/hooks/use-translation";
@@ -93,7 +93,7 @@ export function LoginForm({}: React.ComponentPropsWithoutRef<"form">) {
       </Form>
       <div className="text-center text-sm text-muted-foreground">
         {t("If you don't have an account")}{" "}
-        <a href="#" className="underline">
+        <a href={URL_LIST.auth.register} className="underline">
           {t("Sign up")}
         </a>{" "}
       </div>

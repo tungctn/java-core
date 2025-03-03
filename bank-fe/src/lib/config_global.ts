@@ -2,6 +2,7 @@
 export const URL_LIST = {
   auth: {
     login: "/login",
+    register: "/register",
   },
   root: {
     index: "/",

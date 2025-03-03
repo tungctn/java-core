@@ -24,5 +24,9 @@
   "Please upload an image file.": "Please upload an image file.",
   "File size limit is 10MB.": "File size limit is 10MB.",
   "Avatar updated successfully.": "Avatar updated successfully.",
-  "Avatar update failed.": "Avatar update failed."
+  "Avatar update failed.": "Avatar update failed.",
+  "Register": "Register",
+  "Register successful": "Register successful",
+  "Register failed": "Register failed"
+
 }
