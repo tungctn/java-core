@@ -21,10 +21,16 @@ const InitAppProvider = ({ children }: { children: React.ReactNode }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!access_token) {
+    const currentPath = window.location.pathname;
+    const isLoginPage = currentPath === "/login";
+    const isRegisterPage = currentPath === "/register";
+
+    if (!access_token && !isLoginPage && !isRegisterPage) {
       router.push(URL_LIST.auth.login);
     }
-    getDataForDisplay();
+    if (access_token) {
+      getDataForDisplay();
+    }
   }, [access_token, getDataForDisplay, router]);
 
   return <>{children}</>;
